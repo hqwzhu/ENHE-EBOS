@@ -1,0 +1,136 @@
+{
+  "reportType": "final_development_report",
+  "projectName": "ENHE EBOS Operator Desktop",
+  "projectPath": "C:\\Users\\HU\\Documents\\ENHE-EBOS-Operator",
+  "generatedAt": "2026-07-08T03:01:01+08:00",
+  "developmentCompleted": true,
+  "technologyStack": [
+    "Electron",
+    "React",
+    "Vite",
+    "TypeScript",
+    "Tailwind CSS",
+    "local UI components",
+    "Node.js child_process",
+    "fs/path",
+    "Zod",
+    "Vitest",
+    "electron-builder"
+  ],
+  "pages": [
+    "Dashboard 首页",
+    "外部真实数据录入页",
+    "EBOS 命令运行页",
+    "报告中心",
+    "风险中心",
+    "Production / Staging Schema 人工核对页",
+    "每周运营页",
+    "设置页"
+  ],
+  "coreFeatures": [
+    "Read EBOS operations ready final report",
+    "Display current EBOS status and blockers",
+    "Write validated real external data input",
+    "Run only allowlisted EBOS commands",
+    "Sanitize command output and write command logs",
+    "List and view EBOS JSON/Markdown reports",
+    "Display quarantine and review risk cards",
+    "Show readonly schema query pack and save manual check result",
+    "Configure local EBOS project path without saving secrets",
+    "Package as a Windows Electron desktop app"
+  ],
+  "safetyGuard": {
+    "implemented": true,
+    "file": "electron/safety-guard.ts",
+    "allowlistOnly": true,
+    "auditLogPath": "logs/safety-audit/YYYY-MM-DD.json",
+    "outputSanitization": true,
+    "rendererDirectFsAccess": false,
+    "rendererDirectCommandAccess": false
+  },
+  "allowedCommands": [
+    "npm run test -- src/lib/ebos",
+    "npm run lint",
+    "npm run typecheck",
+    "npm run build",
+    "npx tsx scripts/check-ebos-external-publish-results.ts --date <date>",
+    "npx tsx scripts/backfill-ebos-external-channel-data.ts --date <date>",
+    "npx tsx scripts/run-ebos-weekly-operating-cycle.ts --date <date> --dry-run"
+  ],
+  "forbiddenCommands": [
+    "prisma migrate",
+    "prisma db push",
+    "prisma db seed",
+    "seed",
+    "deploy",
+    "docker",
+    "nginx",
+    "backfill --apply",
+    "git add .",
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "CREATE",
+    "ALTER",
+    "DROP",
+    "TRUNCATE",
+    "DATABASE_URL",
+    ".env"
+  ],
+  "ebosProjectPathReadMode": {
+    "defaultPath": "C:\\Users\\HU\\Documents\\New project 2",
+    "settingsPath": "config/operator-settings.json",
+    "secretStorage": false
+  },
+  "externalDataSavePath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos\\external-publishing\\inputs\\operator-user-real-data-input.json",
+  "reportsCenterReadPath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos",
+  "schemaCheckSavePath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos\\deployment\\prisma-audit\\operator-production-staging-schema-check-result.json",
+  "forbiddenActionResults": {
+    "migrationExecuted": false,
+    "seedExecuted": false,
+    "deploymentExecuted": false,
+    "backfillApplyExecuted": false,
+    "secretReadOrPrinted": false
+  },
+  "qualityResults": {
+    "test": {
+      "command": "npm run test",
+      "status": "passed",
+      "summary": "5 files / 20 tests"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "status": "passed"
+    },
+    "typecheck": {
+      "command": "npm run typecheck",
+      "status": "passed"
+    },
+    "build": {
+      "command": "npm run build",
+      "status": "passed"
+    },
+    "electronBuild": {
+      "command": "npm run electron:build",
+      "status": "passed"
+    },
+    "windowsPackage": {
+      "command": "npm run package:win",
+      "status": "passed",
+      "artifactPath": "C:\\Users\\HU\\Documents\\ENHE-EBOS-Operator\\release\\win-unpacked\\ENHE EBOS Operator.exe"
+    }
+  },
+  "knownLimitations": [
+    "The packaged app currently uses the default Electron icon.",
+    "The weekly operating cycle command is exposed only as dry-run.",
+    "The app does not connect to production or staging databases.",
+    "The app does not implement automatic external publishing."
+  ],
+  "nextRecommendations": [
+    "Add a branded Windows app icon.",
+    "Launch the packaged executable and perform a manual UI walkthrough.",
+    "Use the external data page after real channel publishing exists.",
+    "Keep all migration, seed, deploy, and backfill apply decisions outside this desktop app."
+  ],
+  "blockers": []
+}
