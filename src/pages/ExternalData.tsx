@@ -17,7 +17,7 @@ export default function ExternalData({ settings }: ExternalDataProps) {
     setSavedPath("");
     try {
       const result = await operatorApi.saveExternalData(settings.ebosProjectPath, payload);
-      setSavedPath(`${result.path} (${result.entries} 条记录)`);
+      setSavedPath(`${result.path}，共 ${result.entries} 条记录`);
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
     }
@@ -29,7 +29,7 @@ export default function ExternalData({ settings }: ExternalDataProps) {
       <section className="rounded-md border border-line bg-white p-5">
         <h3 className="text-lg font-semibold text-ink">外部真实数据录入</h3>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          保存路径固定为原 EBOS 项目的 `reports/ebos/external-publishing/inputs/operator-user-real-data-input.json`。保存前会校验 schema，不会覆盖原始输入文件。
+          保存路径固定为原项目的外部发布输入文件。保存前会校验数据格式，不会伪造发布链接，不会自动生成浏览量、咨询数或订单数。
         </p>
       </section>
       {savedPath ? <div className="rounded-md border border-teal-200 bg-teal-50 p-4 text-sm text-teal-900">已保存：{savedPath}</div> : null}
@@ -37,7 +37,9 @@ export default function ExternalData({ settings }: ExternalDataProps) {
       <DataForm onSave={handleSave} />
       <section className="rounded-md border border-line bg-white p-5">
         <h3 className="font-semibold text-ink">下一步建议</h3>
-        <p className="mt-2 text-sm text-slate-600">保存真实数据后，到命令运行页执行“检查外部发布结果”，再执行 backfill dry-run。不要请求 backfill apply，除非 EBOS 判断 canBackfill=true 且你明确批准。</p>
+        <p className="mt-2 text-sm text-slate-600">
+          保存真实数据后，到命令运行页执行“检查外部发布结果”，再执行“数据回填演练”。除非系统判断允许且你明确批准，否则不要执行真实回填。
+        </p>
       </section>
     </div>
   );

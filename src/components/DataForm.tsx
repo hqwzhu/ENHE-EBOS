@@ -7,8 +7,8 @@ type DataFormProps = {
 };
 
 const emptyEntry: ExternalDataEntry = {
-  platform: "wechat",
-  channelName: "微信私域",
+  platform: "微信",
+  channelName: "私域渠道",
   published: false,
   publishedAt: "",
   publishedUrl: "",
@@ -51,7 +51,7 @@ export default function DataForm({ onSave }: DataFormProps) {
           <input className="focus-ring mt-2 w-full rounded-md border border-line px-3 py-2" value={targetDate} onChange={(event) => setTargetDate(event.target.value)} />
         </label>
         <div className="col-span-2 rounded-md bg-amber-50 p-3 text-sm leading-6 text-amber-950">
-          只能填写真实发布和真实观察数据。允许指标为 0，不允许自动生成 publishedUrl，不允许用模拟数据通过 EBOS。
+          只能填写真实发布和真实观察数据。没有数据时填 0，不要为了让系统通过而填写虚假数字。
         </div>
       </div>
       {entries.map((entry, index) => (
@@ -69,23 +69,23 @@ export default function DataForm({ onSave }: DataFormProps) {
             </button>
           </div>
           <div className="grid grid-cols-3 gap-4">
-            <Field label="platform" value={entry.platform} onChange={(value) => update(index, "platform", value)} />
-            <Field label="channelName" value={entry.channelName} onChange={(value) => update(index, "channelName", value)} />
+            <Field label="平台名称" value={entry.platform} onChange={(value) => update(index, "platform", value)} />
+            <Field label="渠道名称" value={entry.channelName} onChange={(value) => update(index, "channelName", value)} />
             <label className="flex items-center gap-3 rounded-md border border-line px-3 py-2 text-sm font-medium text-slate-700">
               <input type="checkbox" checked={entry.published} onChange={(event) => update(index, "published", event.target.checked)} />
-              published
+              已真实发布
             </label>
-            <Field label="publishedAt" value={entry.publishedAt} onChange={(value) => update(index, "publishedAt", value)} />
-            <Field label="publishedUrl" value={entry.publishedUrl} onChange={(value) => update(index, "publishedUrl", value)} />
-            <NumberField label="views" value={entry.views} onChange={(value) => update(index, "views", value)} />
-            <NumberField label="clicks" value={entry.clicks} onChange={(value) => update(index, "clicks", value)} />
-            <NumberField label="messages" value={entry.messages} onChange={(value) => update(index, "messages", value)} />
-            <NumberField label="leads" value={entry.leads} onChange={(value) => update(index, "leads", value)} />
-            <NumberField label="orders" value={entry.orders} onChange={(value) => update(index, "orders", value)} />
-            <NumberField label="revenue" value={entry.revenue} onChange={(value) => update(index, "revenue", value)} />
-            <Field label="evidence" value={entry.evidence} onChange={(value) => update(index, "evidence", value)} />
+            <Field label="发布时间" value={entry.publishedAt} onChange={(value) => update(index, "publishedAt", value)} />
+            <Field label="发布链接" value={entry.publishedUrl} onChange={(value) => update(index, "publishedUrl", value)} />
+            <NumberField label="浏览量" value={entry.views} onChange={(value) => update(index, "views", value)} />
+            <NumberField label="点击数" value={entry.clicks} onChange={(value) => update(index, "clicks", value)} />
+            <NumberField label="私信数" value={entry.messages} onChange={(value) => update(index, "messages", value)} />
+            <NumberField label="线索数" value={entry.leads} onChange={(value) => update(index, "leads", value)} />
+            <NumberField label="订单数" value={entry.orders} onChange={(value) => update(index, "orders", value)} />
+            <NumberField label="收入金额" value={entry.revenue} onChange={(value) => update(index, "revenue", value)} />
+            <Field label="证据说明" value={entry.evidence} onChange={(value) => update(index, "evidence", value)} />
             <label className="col-span-3 text-sm font-medium text-slate-700">
-              notes
+              备注
               <textarea className="focus-ring mt-2 min-h-24 w-full rounded-md border border-line px-3 py-2" value={entry.notes} onChange={(event) => update(index, "notes", event.target.value)} />
             </label>
           </div>

@@ -6,6 +6,7 @@ describe("renderer security", () => {
   it("renderer code does not import fs or child_process directly", () => {
     const files = [
       "src/App.tsx",
+      "src/pages/BeginnerGuide.tsx",
       "src/lib/api.ts",
       "src/pages/Dashboard.tsx",
       "src/pages/CommandRunner.tsx",

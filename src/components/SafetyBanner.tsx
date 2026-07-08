@@ -8,7 +8,7 @@ export default function SafetyBanner() {
         安全边界
       </div>
       <p className="mt-2 leading-6">
-        本应用只允许读取 EBOS 报告、保存用户真实输入、运行白名单 dry-run 或质量检查命令。禁止 migration、seed、deploy、server/docker/nginx、backfill apply、git add . 和任何数据库写操作。
+        本应用只允许读取报告、保存用户真实输入、运行白名单检查和演练命令。禁止数据库迁移、种子数据、部署、服务器、容器、反向代理、真实回填、批量提交和任何数据库写入操作。
       </p>
     </div>
   );

@@ -20,7 +20,7 @@ export default function WeeklyOps({ settings }: WeeklyOpsProps) {
   }, [settings.ebosProjectPath, targetDate]);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   async function runDryRun() {
@@ -37,7 +37,7 @@ export default function WeeklyOps({ settings }: WeeklyOpsProps) {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-ink">每周运营</h3>
-            <p className="mt-2 text-sm text-slate-600">不创建系统级定时任务，只运行或复制本地 dry-run 命令。</p>
+            <p className="mt-2 text-sm text-slate-600">这里只运行本地演练命令，不创建系统级定时任务。</p>
           </div>
           <label className="text-sm font-medium text-slate-700">
             日期
@@ -47,25 +47,25 @@ export default function WeeklyOps({ settings }: WeeklyOpsProps) {
         <div className="mt-4 flex gap-3">
           <button type="button" onClick={runDryRun} className="focus-ring inline-flex items-center gap-2 rounded-md bg-action px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800">
             <Play className="h-4 w-4" />
-            运行 weekly dry-run
+            运行每周演练
           </button>
-          <button type="button" onClick={() => navigator.clipboard.writeText(command)} className="focus-ring inline-flex items-center gap-2 rounded-md border border-line px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+          <button type="button" onClick={() => void navigator.clipboard.writeText(command)} className="focus-ring inline-flex items-center gap-2 rounded-md border border-line px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
             <Copy className="h-4 w-4" />
-            复制每周运行命令
+            复制每周命令
           </button>
         </div>
       </section>
       {data ? (
         <>
           <div className="grid grid-cols-4 gap-4">
-            <Mini label="hasRealSignals" value={formatBoolean(data.hasRealSignals)} />
-            <Mini label="canBackfill" value={formatBoolean(data.canBackfill)} />
-            <Mini label="safeToRunMigration" value={formatBoolean(data.safeToRunMigration)} />
-            <Mini label="blockers" value={String(data.blockers.length)} />
+            <Mini label="真实信号" value={formatBoolean(data.hasRealSignals)} />
+            <Mini label="允许回填" value={formatBoolean(data.canBackfill)} />
+            <Mini label="允许迁移" value={formatBoolean(data.safeToRunMigration)} />
+            <Mini label="阻塞数量" value={String(data.blockers.length)} />
           </div>
           <section className="rounded-md border border-line bg-white">
             <div className="border-b border-line px-4 py-3 text-sm font-semibold text-ink">本周报告预览</div>
-            <pre className="max-h-80 overflow-auto p-4 text-xs leading-5 text-slate-800">{data.weeklyReportPreview || "未找到 weekly markdown 报告"}</pre>
+            <pre className="max-h-80 overflow-auto p-4 text-xs leading-5 text-slate-800">{data.weeklyReportPreview || "未找到每周报告"}</pre>
           </section>
           <section className="rounded-md border border-line bg-white p-5">
             <h3 className="font-semibold text-ink">下周行动清单</h3>

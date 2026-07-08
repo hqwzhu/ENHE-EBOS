@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
 import { dirname, join } from "node:path";
 import type { CommandId, ExternalDataPayload, OperatorSettings, SchemaCheckResult } from "../src/lib/types";
 import {
@@ -24,7 +24,7 @@ async function createWindow() {
     height: 880,
     minWidth: 1120,
     minHeight: 720,
-    title: "ENHE EBOS Operator",
+    title: "ENHE 经营系统操作台",
     icon: getWindowIconPath(),
     backgroundColor: "#f7f8fa",
     webPreferences: {
@@ -87,6 +87,7 @@ function isAllowedExternalUrl(url: string) {
 }
 
 app.whenReady().then(async () => {
+  Menu.setApplicationMenu(null);
   registerIpc();
   await createWindow();
 

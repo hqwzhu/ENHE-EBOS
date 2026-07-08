@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "ENHE EBOS Operator Desktop",
+  "description": "ENHE 经营系统操作台",
   "main": "dist-electron/main.cjs",
   "author": "ENHE",
   "homepage": "https://www.enhe-tech.com.cn",
@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit",
     "electron:dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on tcp:5173 && npm run build:electron && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
     "electron:build": "npm run build",
-    "package:win": "npm run build && electron-builder --win",
+    "package:win": "npm run build && electron-builder --win nsis --publish never --config.electronDist=node_modules/electron/dist && powershell -NoProfile -ExecutionPolicy Bypass -Command \"Remove-Item -Recurse -Force release\\win-unpacked,release\\.icon-ico -ErrorAction SilentlyContinue; Remove-Item -Force release\\*.blockmap,release\\latest.yml,release\\builder-debug.yml -ErrorAction SilentlyContinue\"",
     "package:win:dir": "npm run build && electron-builder --win --dir"
   },
   "dependencies": {
@@ -53,7 +53,7 @@
   },
   "build": {
     "appId": "cn.enhe.ebos.operator",
-    "productName": "ENHE EBOS Operator",
+    "productName": "ENHE 经营系统操作台",
     "directories": {
       "output": "release"
     },
@@ -65,10 +65,9 @@
     "win": {
       "icon": "public/brand/enhe_app_icon.ico",
       "target": [
-        "nsis",
-        "dir"
+        "nsis"
       ],
-      "artifactName": "ENHE-EBOS-Operator-${version}.${ext}"
+      "artifactName": "ENHE-经营系统操作台-安装包-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -76,7 +75,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "ENHE EBOS Operator"
+      "shortcutName": "ENHE 经营系统操作台"
     }
   }
 }

@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import type { ReactNode } from "react";
 import { ExternalLink } from "lucide-react";
 import type { AppPage } from "../App";
+import logoSrc from "../assets/enhe_horizontal_black_transparent_white_bg.png";
 import { developerName, developerWebsiteLabel, developerWebsiteUrl } from "../lib/brand";
 import { cx } from "../lib/format";
 import type { OperatorSettings } from "../lib/types";
@@ -27,13 +28,9 @@ export default function Layout({ navItems, activePage, onNavigate, pageTitle, se
       <aside className="flex w-72 flex-col border-r border-line bg-white/90 px-4 py-5">
         <div className="mb-6 rounded-md border border-line bg-white px-4 py-4 shadow-soft-panel">
           <div className="rounded-md bg-white p-2">
-            <img
-              src="/brand/enhe_horizontal_black_transparent_white_bg.png"
-              alt="ENHE"
-              className="h-10 w-auto object-contain"
-            />
+            <img src={logoSrc} alt="ENHE" className="h-10 w-auto object-contain" />
           </div>
-          <h1 className="mt-4 text-xl font-semibold leading-tight text-ink">EBOS Operator</h1>
+          <h1 className="mt-4 text-xl font-semibold leading-tight text-ink">经营系统操作台</h1>
           <p className="mt-2 text-xs leading-5 text-slate-500">本地桌面运营控制台</p>
         </div>
         <nav className="space-y-1">
@@ -79,7 +76,7 @@ export default function Layout({ navItems, activePage, onNavigate, pageTitle, se
               <h2 className="mt-1 text-2xl font-semibold text-ink">{pageTitle}</h2>
             </div>
             <div className="max-w-2xl truncate rounded-md border border-line bg-panel px-4 py-3 text-right text-xs text-slate-600">
-              <div className="font-semibold text-slate-800">EBOS 项目路径</div>
+              <div className="font-semibold text-slate-800">项目路径</div>
               <div className="mt-1 truncate">{settings.ebosProjectPath}</div>
             </div>
           </div>

@@ -36,13 +36,13 @@ export async function validateProjectPath(projectPath: string): Promise<PathVali
     ]);
 
   const messages = [
-    pathExists ? "EBOS project path exists." : "EBOS project path is missing.",
-    packageJsonExists ? "package.json found." : "package.json is missing.",
-    reportsExists ? "reports/ebos found." : "reports/ebos is missing.",
-    weeklyScriptExists ? "weekly operating cycle script found." : "weekly operating cycle script is missing.",
-    nodeAvailable ? "Node is available." : "Node is unavailable.",
-    npmAvailable ? "npm is available." : "npm is unavailable.",
-    npxAvailable ? "npx is available." : "npx is unavailable.",
+    pathExists ? "项目路径存在。" : "项目路径不存在。",
+    packageJsonExists ? "已找到项目配置文件。" : "缺少项目配置文件。",
+    reportsExists ? "已找到报告目录。" : "缺少报告目录。",
+    weeklyScriptExists ? "已找到每周运营脚本。" : "缺少每周运营脚本。",
+    nodeAvailable ? "本机运行环境可用。" : "本机运行环境不可用。",
+    npmAvailable ? "包管理工具可用。" : "包管理工具不可用。",
+    npxAvailable ? "命令执行工具可用。" : "命令执行工具不可用。",
   ];
 
   return {

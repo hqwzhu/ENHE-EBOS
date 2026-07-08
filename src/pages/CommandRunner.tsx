@@ -10,13 +10,13 @@ type CommandRunnerProps = {
 };
 
 const commands: Array<{ id: CommandId; label: string; description: string }> = [
-  { id: "external-check", label: "检查外部发布结果", description: "读取真实数据输入并计算 hasRealSignals/canBackfill。" },
-  { id: "backfill-dry-run", label: "运行 backfill dry-run", description: "只做 dry-run，不允许 --apply。" },
-  { id: "weekly-dry-run", label: "运行 weekly operating cycle dry-run", description: "验证每周运营流程，不创建系统任务。" },
-  { id: "ebos-test", label: "运行 EBOS test", description: "npm run test -- src/lib/ebos。" },
-  { id: "lint", label: "运行 lint", description: "npm run lint。" },
-  { id: "typecheck", label: "运行 typecheck", description: "npm run typecheck。" },
-  { id: "build", label: "运行 build", description: "npm run build。" },
+  { id: "external-check", label: "检查外部发布结果", description: "读取真实数据输入，并计算是否已有真实信号、是否允许回填。" },
+  { id: "backfill-dry-run", label: "运行数据回填演练", description: "只做演练，不会写入真实回填数据。" },
+  { id: "weekly-dry-run", label: "运行每周运营演练", description: "验证每周运营流程，不创建系统任务。" },
+  { id: "ebos-test", label: "运行系统测试", description: "只运行经营系统相关测试。" },
+  { id: "lint", label: "运行代码检查", description: "检查代码风格和潜在问题。" },
+  { id: "typecheck", label: "运行类型检查", description: "检查类型是否正确。" },
+  { id: "build", label: "运行构建检查", description: "检查项目是否能够正常构建。" },
 ];
 
 export default function CommandRunner({ settings }: CommandRunnerProps) {
@@ -40,7 +40,9 @@ export default function CommandRunner({ settings }: CommandRunnerProps) {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-ink">白名单命令运行</h3>
-            <p className="mt-2 text-sm text-slate-600">用户不能输入任意命令，只能点击白名单按钮。所有命令都会写入 logs/commands 和 safety-audit。</p>
+            <p className="mt-2 text-sm text-slate-600">
+              用户不能输入任意命令，只能点击这里列出的安全按钮。危险命令会被安全守卫拦截。
+            </p>
           </div>
           <label className="text-sm font-medium text-slate-700">
             目标日期
@@ -68,7 +70,9 @@ export default function CommandRunner({ settings }: CommandRunnerProps) {
       <CommandOutput result={result} />
       <section className="rounded-md border border-line bg-white p-5">
         <h3 className="font-semibold text-ink">下一步建议</h3>
-        <p className="mt-2 text-sm text-slate-600">先运行检查外部发布结果，再运行 backfill dry-run。任何被 Safety Guard 阻止的命令都不要绕过。</p>
+        <p className="mt-2 text-sm text-slate-600">
+          先运行“检查外部发布结果”，再运行“数据回填演练”。如果某个命令被安全守卫拦截，不要绕过。
+        </p>
       </section>
     </div>
   );

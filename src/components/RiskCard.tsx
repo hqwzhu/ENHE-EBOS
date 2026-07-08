@@ -1,6 +1,7 @@
 import { AlertTriangle, ShieldCheck } from "lucide-react";
 import type { RiskSummary } from "../lib/types";
 import { cx, formatBoolean } from "../lib/format";
+import { summarizeRiskText, translateRiskLevel, translateStatus } from "../lib/display";
 
 type RiskCardProps = {
   risk: RiskSummary;
@@ -19,21 +20,21 @@ export default function RiskCard({ risk }: RiskCardProps) {
     <article className={cx("rounded-md border p-4", tone[risk.riskLevel])}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="text-base font-semibold text-ink">{risk.title}</h3>
-          <p className="mt-2 text-sm leading-6 text-slate-700">{risk.reason}</p>
+          <h3 className="text-base font-semibold text-ink">{summarizeRiskText(risk.title)}</h3>
+          <p className="mt-2 text-sm leading-6 text-slate-700">{summarizeRiskText(risk.reason)}</p>
         </div>
         {critical ? <AlertTriangle className="h-5 w-5 text-red-700" /> : <ShieldCheck className="h-5 w-5 text-teal-700" />}
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-        <Badge label="riskLevel" value={risk.riskLevel} />
-        <Badge label="status" value={risk.status} />
-        <Badge label="canRunNow" value={formatBoolean(risk.canRunNow)} />
-        <Badge label="canCommitNow" value={formatBoolean(risk.canCommitNow)} />
-        <Badge label="requiresUserConfirmation" value={formatBoolean(risk.requiresUserConfirmation)} />
+        <Badge label="风险等级" value={translateRiskLevel(risk.riskLevel)} />
+        <Badge label="状态" value={translateStatus(risk.status)} />
+        <Badge label="现在可运行" value={formatBoolean(risk.canRunNow)} />
+        <Badge label="现在可提交" value={formatBoolean(risk.canCommitNow)} />
+        <Badge label="需要用户确认" value={formatBoolean(risk.requiresUserConfirmation)} />
       </div>
       <div className="mt-4 rounded-md bg-white/70 p-3 text-sm text-slate-800">
         <span className="font-semibold">下一步：</span>
-        {risk.nextAction}
+        {summarizeRiskText(risk.nextAction)}
       </div>
     </article>
   );

@@ -1,43 +1,44 @@
-# ENHE EBOS Operator Desktop
+# ENHE 经营系统操作台
 
-ENHE EBOS Operator Desktop is a local Windows desktop console for ENHE Business OS operations.
+ENHE 经营系统操作台是用于本地经营巡检的桌面应用。
 
-It is designed for weekly EBOS operating work: reading EBOS reports, checking risk status, recording real external channel data, running allowlisted local EBOS commands, and keeping migration, seed, deployment, and backfill apply actions outside the desktop app.
+它用于读取经营报告、检查风险状态、录入真实外部渠道数据、运行白名单检查命令，并把数据库迁移、种子数据、部署和真实回填等危险动作排除在应用之外。
 
-Brand assets are stored in `public/brand/` and used for the app window icon, favicon, packaged Windows app icon, and in-app navigation branding.
+品牌素材存放在 `public/brand/`，用于窗口图标、网页图标、Windows 安装包图标和应用内导航标识。
 
-## Project Introduction
+## 项目介绍
 
-ENHE EBOS Operator Desktop provides a safer local operating layer for the ENHE AI tools site. It helps an operator inspect EBOS status without opening the full codebase every time.
+本应用为 ENHE AI 工具站提供一个更安全的本地运营入口，让非技术人员也能按步骤完成经营巡检。
 
-Core pages:
+核心页面：
 
-- Dashboard: current EBOS status, blockers, risks, and key operational signals.
-- External Data: record only real external channel publishing data.
-- Commands: run only allowlisted EBOS checks and dry-run commands.
-- Reports: browse EBOS JSON and Markdown reports.
-- Risk Center: review quarantined or high-risk batches before action.
-- Schema Check: manually record production/staging schema comparison evidence.
-- Weekly Ops: review weekly operating actions and dry-run status.
-- Settings: configure the local EBOS project path without storing secrets.
+- 首页总览：查看当前运营状态、阻塞项、风险和关键指标。
+- 新手指南：按步骤引导新用户完成首次使用。
+- 外部数据：只录入真实渠道发布数据。
+- 命令运行：只运行白名单检查和演练命令。
+- 报告中心：查看经营系统生成的报告。
+- 风险中心：查看隔离项和高风险事项。
+- 结构核对：记录生产和预发结构人工核对结果。
+- 每周运营：查看每周运营动作和演练状态。
+- 设置：配置本地项目路径，不保存密钥。
 
-Safety boundaries:
+安全边界：
 
-- No Prisma migration execution from the app.
-- No seed execution from the app.
-- No deployment, Docker, Nginx, or server command execution from the app.
-- No `backfill --apply` execution from the app.
-- No secret storage in app settings.
+- 应用内不执行数据库迁移。
+- 应用内不执行种子数据。
+- 应用内不执行部署、服务器、容器或反向代理命令。
+- 应用内不执行真实回填。
+- 设置中不保存密钥。
 
-## Installation
+## 安装教程
 
-Prerequisites:
+开发环境需要：
 
-- Windows 10 or later.
-- Node.js and npm installed.
-- Git installed.
+- Windows 10 或更高版本。
+- 已安装 Node.js 和 npm。
+- 已安装 Git。
 
-Clone and install:
+拉取项目并安装依赖：
 
 ```bash
 git clone https://github.com/hqwzhu/ENHE-EBOS.git
@@ -45,46 +46,41 @@ cd ENHE-EBOS
 npm install
 ```
 
-Start the desktop app in development mode:
+开发模式启动：
 
 ```bash
 npm run electron:dev
 ```
 
-Build the production app:
+构建生产版本：
 
 ```bash
 npm run build
 ```
 
-Package the Windows desktop app:
+生成给用户安装的正式安装包：
 
 ```bash
 npm run package:win
 ```
 
-The Windows installer is generated at:
+正式安装包输出位置：
 
 ```text
-release/ENHE-EBOS-Operator-1.0.0.exe
+release/ENHE-经营系统操作台-安装包-1.0.0.exe
 ```
 
-The unpacked executable is also generated at:
+## 使用说明
 
-```text
-release/win-unpacked/ENHE EBOS Operator.exe
-```
+1. 双击安装包并完成安装。
+2. 打开桌面快捷方式“ENHE 经营系统操作台”。
+3. 进入设置页，确认项目路径检查通过。
+4. 回到首页总览，查看部署状态、上线检查和质量检查。
+5. 如果已经真实发布外部渠道，进入外部数据页录入真实数据。
+6. 进入命令运行页，只运行检查和演练命令。
+7. 进入报告中心和风险中心，查看报告和下一步建议。
 
-## Usage
-
-1. Open `ENHE EBOS Operator.exe` or run `npm run electron:dev`.
-2. Go to Settings and confirm the EBOS project path.
-3. Use Dashboard to inspect deployment status, external publishing status, and blockers.
-4. Use External Data only after real external channel publishing has happened.
-5. Use Commands for allowlisted checks such as EBOS tests, lint, typecheck, build, and dry-run operating commands.
-6. Use Reports and Risk Center to review generated EBOS evidence before committing or taking action.
-
-## Development
+## 开发命令
 
 ```bash
 npm install
@@ -106,7 +102,7 @@ npm run build
 npm run package:win
 ```
 
-## Developer
+## 开发者
 
-- Developer: ENHE
-- Website: [https://www.enhe-tech.com.cn](https://www.enhe-tech.com.cn)
+- 开发者：ENHE
+- 网站：[https://www.enhe-tech.com.cn](https://www.enhe-tech.com.cn)

@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, BarChart3, FileText, Home, PlayCircle, Settings as SettingsIcon, ShieldCheck, TableProperties, UploadCloud } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  BookOpenCheck,
+  FileText,
+  Home,
+  PlayCircle,
+  Settings as SettingsIcon,
+  ShieldCheck,
+  TableProperties,
+  UploadCloud,
+} from "lucide-react";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import ExternalData from "./pages/ExternalData";
@@ -9,11 +20,13 @@ import RiskCenter from "./pages/RiskCenter";
 import SchemaCheck from "./pages/SchemaCheck";
 import WeeklyOps from "./pages/WeeklyOps";
 import Settings from "./pages/Settings";
+import BeginnerGuide from "./pages/BeginnerGuide";
 import { operatorApi } from "./lib/api";
 import { defaultEbosProjectPath, defaultTargetDate, type OperatorSettings } from "./lib/types";
 
 export type AppPage =
   | "dashboard"
+  | "guide"
   | "external-data"
   | "commands"
   | "reports"
@@ -24,11 +37,12 @@ export type AppPage =
 
 const navItems = [
   { id: "dashboard", label: "首页总览", icon: Home },
+  { id: "guide", label: "新手指南", icon: BookOpenCheck },
   { id: "external-data", label: "外部数据", icon: UploadCloud },
   { id: "commands", label: "命令运行", icon: PlayCircle },
   { id: "reports", label: "报告中心", icon: FileText },
   { id: "risks", label: "风险中心", icon: ShieldCheck },
-  { id: "schema", label: "Schema 核对", icon: TableProperties },
+  { id: "schema", label: "结构核对", icon: TableProperties },
   { id: "weekly", label: "每周运营", icon: BarChart3 },
   { id: "settings", label: "设置", icon: SettingsIcon },
 ] as const;
@@ -62,6 +76,7 @@ export default function App() {
         </div>
       ) : null}
       {page === "dashboard" && <Dashboard settings={settings} onNavigate={setPage} />}
+      {page === "guide" && <BeginnerGuide onNavigate={setPage} />}
       {page === "external-data" && <ExternalData settings={settings} />}
       {page === "commands" && <CommandRunner settings={settings} />}
       {page === "reports" && <Reports settings={settings} />}
