@@ -1,7 +1,7 @@
 # ENHE EBOS Operator Desktop Final Development Report
 
 - projectPath: `C:\Users\HU\Documents\ENHE-EBOS-Operator`
-- generatedAt: 2026-07-08T03:01:01+08:00
+- generatedAt: 2026-07-08T09:38:52+08:00
 - developmentCompleted: true
 
 ## Technology Stack
@@ -56,6 +56,12 @@ Forbidden commands and patterns:
 - Reports center read path: `C:\Users\HU\Documents\New project 2\reports\ebos`
 - Schema check result save path: `C:\Users\HU\Documents\New project 2\reports\ebos\deployment\prisma-audit\operator-production-staging-schema-check-result.json`
 
+## Brand Assets
+
+- Source logo package: `E:\AiProject\01.网站相关资料\LOGO\enhe_logo_final_exact_package`
+- Local assets: `public/brand/enhe_main_logo_transparent.png`, `public/brand/enhe_horizontal_black_transparent_white_bg.png`, `public/brand/enhe_app_icon_1024.png`, `public/brand/enhe_app_icon.ico`
+- Used for: app window icon, favicon, packaged Windows app icon, and in-app navigation branding.
+
 ## Forbidden Action Results
 
 - migration executed: no
@@ -83,14 +89,13 @@ C:\Users\HU\Documents\ENHE-EBOS-Operator\release\win-unpacked\ENHE EBOS Operator
 
 ## Known Limitations
 
-- The packaged app currently uses the default Electron icon.
 - The weekly operating cycle command is exposed only as dry-run.
 - The app does not connect to production or staging databases.
 - The app does not implement automatic external publishing.
 
 ## Next Recommendations
 
-1. Add a branded Windows app icon.
-2. Launch the packaged executable and perform a manual UI walkthrough.
+1. Launch the packaged executable and perform a manual UI walkthrough.
+2. Keep ENHE brand assets in `public/brand/` synchronized with the official logo package.
 3. Use the external data page after real channel publishing exists.
 4. Keep migration, seed, deploy, and backfill apply decisions outside this desktop app.

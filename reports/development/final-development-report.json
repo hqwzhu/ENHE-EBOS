@@ -2,7 +2,7 @@
   "reportType": "final_development_report",
   "projectName": "ENHE EBOS Operator Desktop",
   "projectPath": "C:\\Users\\HU\\Documents\\ENHE-EBOS-Operator",
-  "generatedAt": "2026-07-08T03:01:01+08:00",
+  "generatedAt": "2026-07-08T09:38:52+08:00",
   "developmentCompleted": true,
   "technologyStack": [
     "Electron",
@@ -37,6 +37,7 @@
     "Display quarantine and review risk cards",
     "Show readonly schema query pack and save manual check result",
     "Configure local EBOS project path without saving secrets",
+    "Show ENHE brand logo in the desktop shell",
     "Package as a Windows Electron desktop app"
   ],
   "safetyGuard": {
@@ -85,6 +86,23 @@
   "externalDataSavePath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos\\external-publishing\\inputs\\operator-user-real-data-input.json",
   "reportsCenterReadPath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos",
   "schemaCheckSavePath": "C:\\Users\\HU\\Documents\\New project 2\\reports\\ebos\\deployment\\prisma-audit\\operator-production-staging-schema-check-result.json",
+  "brandAssets": {
+    "implemented": true,
+    "sourceFiles": [
+      "E:\\AiProject\\01.网站相关资料\\LOGO\\enhe_logo_final_exact_package\\enhe_main_logo_transparent.png",
+      "E:\\AiProject\\01.网站相关资料\\LOGO\\enhe_logo_final_exact_package\\enhe_horizontal_black_transparent_white_bg.png"
+    ],
+    "copiedAssets": [
+      "public/brand/enhe_main_logo_transparent.png",
+      "public/brand/enhe_horizontal_black_transparent_white_bg.png",
+      "public/brand/enhe_app_icon_1024.png",
+      "public/brand/enhe_app_icon.ico"
+    ],
+    "windowIcon": "public/brand/enhe_app_icon_1024.png",
+    "favicon": "public/brand/enhe_app_icon_1024.png",
+    "windowsPackageIcon": "public/brand/enhe_app_icon.ico",
+    "layoutLogo": "public/brand/enhe_horizontal_black_transparent_white_bg.png"
+  },
   "forbiddenActionResults": {
     "migrationExecuted": false,
     "seedExecuted": false,
@@ -121,14 +139,13 @@
     }
   },
   "knownLimitations": [
-    "The packaged app currently uses the default Electron icon.",
     "The weekly operating cycle command is exposed only as dry-run.",
     "The app does not connect to production or staging databases.",
     "The app does not implement automatic external publishing."
   ],
   "nextRecommendations": [
-    "Add a branded Windows app icon.",
     "Launch the packaged executable and perform a manual UI walkthrough.",
+    "Keep ENHE brand assets in public/brand synchronized with the official logo package.",
     "Use the external data page after real channel publishing exists.",
     "Keep all migration, seed, deploy, and backfill apply decisions outside this desktop app."
   ],

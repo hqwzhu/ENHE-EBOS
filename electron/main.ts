@@ -24,6 +24,7 @@ async function createWindow() {
     minWidth: 1120,
     minHeight: 720,
     title: "ENHE EBOS Operator",
+    icon: getWindowIconPath(),
     backgroundColor: "#f7f8fa",
     webPreferences: {
       preload: join(__dirname, "preload.cjs"),
@@ -39,6 +40,14 @@ async function createWindow() {
   } else {
     await mainWindow.loadFile(join(appRoot, "dist", "index.html"));
   }
+}
+
+function getWindowIconPath() {
+  if (process.env.VITE_DEV_SERVER_URL) {
+    return join(appRoot, "public", "brand", "enhe_app_icon_1024.png");
+  }
+
+  return join(appRoot, "dist", "brand", "enhe_app_icon_1024.png");
 }
 
 app.whenReady().then(async () => {

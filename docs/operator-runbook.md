@@ -27,6 +27,8 @@ The unpacked Windows executable is generated at:
 release/win-unpacked/ENHE EBOS Operator.exe
 ```
 
+The packaged app uses the ENHE brand icon from `public/brand/enhe_app_icon.ico`.
+
 ## Safety Rules
 
 - Do not run migration, seed, deploy, Docker, Nginx, or server commands from this app.

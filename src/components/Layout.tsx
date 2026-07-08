@@ -23,10 +23,16 @@ export default function Layout({ navItems, activePage, onNavigate, pageTitle, se
   return (
     <div className="flex min-h-[100dvh]">
       <aside className="w-72 border-r border-line bg-white/90 px-4 py-5">
-        <div className="mb-6 rounded-md bg-ink px-4 py-4 text-white">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-teal-100">ENHE</p>
-          <h1 className="mt-2 text-xl font-semibold leading-tight">EBOS Operator</h1>
-          <p className="mt-2 text-xs leading-5 text-slate-300">本地桌面运营控制台</p>
+        <div className="mb-6 rounded-md border border-line bg-white px-4 py-4 shadow-soft-panel">
+          <div className="rounded-md bg-white p-2">
+            <img
+              src="/brand/enhe_horizontal_black_transparent_white_bg.png"
+              alt="ENHE"
+              className="h-10 w-auto object-contain"
+            />
+          </div>
+          <h1 className="mt-4 text-xl font-semibold leading-tight text-ink">EBOS Operator</h1>
+          <p className="mt-2 text-xs leading-5 text-slate-500">本地桌面运营控制台</p>
         </div>
         <nav className="space-y-1">
           {navItems.map((item) => {

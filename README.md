@@ -2,6 +2,8 @@
 
 Local Windows desktop console for ENHE Business OS operations.
 
+Brand assets are stored in `public/brand/` and used for the app window icon, favicon, packaged Windows app icon, and in-app navigation branding.
+
 ## Development
 
 ```bash
