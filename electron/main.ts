@@ -14,6 +14,7 @@ import {
 } from "./file-service";
 import { runEbosCommand } from "./command-runner";
 import { readSettings, saveSettings } from "./settings-service";
+import { developerWebsiteUrl } from "../src/lib/brand";
 
 const appRoot = process.cwd();
 
@@ -34,6 +35,14 @@ async function createWindow() {
     },
   });
 
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isAllowedExternalUrl(url)) {
+      void shell.openExternal(url);
+    }
+
+    return { action: "deny" };
+  });
+
   const devUrl = process.env.VITE_DEV_SERVER_URL;
   if (devUrl) {
     await mainWindow.loadURL(devUrl);
@@ -48,6 +57,17 @@ function getWindowIconPath() {
   }
 
   return join(appRoot, "dist", "brand", "enhe_app_icon_1024.png");
+}
+
+function isAllowedExternalUrl(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    const developerUrl = new URL(developerWebsiteUrl);
+
+    return parsedUrl.origin === developerUrl.origin && parsedUrl.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 app.whenReady().then(async () => {

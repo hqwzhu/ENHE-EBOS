@@ -1,8 +1,10 @@
 import type { ComponentType } from "react";
 import type { ReactNode } from "react";
+import { ExternalLink } from "lucide-react";
 import type { AppPage } from "../App";
-import type { OperatorSettings } from "../lib/types";
+import { developerName, developerWebsiteLabel, developerWebsiteUrl } from "../lib/brand";
 import { cx } from "../lib/format";
+import type { OperatorSettings } from "../lib/types";
 
 type NavItem = {
   id: AppPage;
@@ -22,7 +24,7 @@ type LayoutProps = {
 export default function Layout({ navItems, activePage, onNavigate, pageTitle, settings, children }: LayoutProps) {
   return (
     <div className="flex min-h-[100dvh]">
-      <aside className="w-72 border-r border-line bg-white/90 px-4 py-5">
+      <aside className="flex w-72 flex-col border-r border-line bg-white/90 px-4 py-5">
         <div className="mb-6 rounded-md border border-line bg-white px-4 py-4 shadow-soft-panel">
           <div className="rounded-md bg-white p-2">
             <img
@@ -55,6 +57,19 @@ export default function Layout({ navItems, activePage, onNavigate, pageTitle, se
             );
           })}
         </nav>
+        <div className="mt-auto rounded-md border border-line bg-panel p-3 text-xs text-slate-600">
+          <div className="font-semibold text-slate-800">开发者</div>
+          <div className="mt-1">{developerName}</div>
+          <a
+            href={developerWebsiteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="focus-ring mt-3 inline-flex w-full items-center justify-between gap-2 rounded-md border border-line bg-white px-3 py-2 font-medium text-action transition hover:border-action/50 hover:bg-teal-50"
+          >
+            <span>{developerWebsiteLabel}</span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+          </a>
+        </div>
       </aside>
       <main className="flex min-w-0 flex-1 flex-col">
         <header className="border-b border-line bg-white/80 px-8 py-5">
