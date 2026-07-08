@@ -16,7 +16,7 @@ import { runEbosCommand } from "./command-runner";
 import { readSettings, saveSettings } from "./settings-service";
 import { developerWebsiteUrl } from "../src/lib/brand";
 
-const appRoot = process.cwd();
+const developmentRoot = process.cwd();
 
 async function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -47,16 +47,32 @@ async function createWindow() {
   if (devUrl) {
     await mainWindow.loadURL(devUrl);
   } else {
-    await mainWindow.loadFile(join(appRoot, "dist", "index.html"));
+    await mainWindow.loadFile(join(getApplicationRoot(), "dist", "index.html"));
   }
 }
 
 function getWindowIconPath() {
   if (process.env.VITE_DEV_SERVER_URL) {
-    return join(appRoot, "public", "brand", "enhe_app_icon_1024.png");
+    return join(developmentRoot, "public", "brand", "enhe_app_icon_1024.png");
   }
 
-  return join(appRoot, "dist", "brand", "enhe_app_icon_1024.png");
+  return join(getApplicationRoot(), "dist", "brand", "enhe_app_icon_1024.png");
+}
+
+function getApplicationRoot() {
+  if (process.env.VITE_DEV_SERVER_URL) {
+    return developmentRoot;
+  }
+
+  return app.getAppPath();
+}
+
+function getStorageRoot() {
+  if (process.env.VITE_DEV_SERVER_URL) {
+    return developmentRoot;
+  }
+
+  return app.getPath("userData");
 }
 
 function isAllowedExternalUrl(url: string) {
@@ -88,15 +104,17 @@ app.on("window-all-closed", () => {
 });
 
 function registerIpc() {
-  ipcMain.handle("settings:get", () => readSettings(appRoot));
-  ipcMain.handle("settings:save", (_event, settings: OperatorSettings) => saveSettings(appRoot, settings));
+  const storageRoot = getStorageRoot();
+
+  ipcMain.handle("settings:get", () => readSettings(storageRoot));
+  ipcMain.handle("settings:save", (_event, settings: OperatorSettings) => saveSettings(storageRoot, settings));
   ipcMain.handle("project:validate", (_event, projectPath: string) => validateProjectPath(projectPath));
   ipcMain.handle("dashboard:get", (_event, projectPath: string) => getDashboard(projectPath));
   ipcMain.handle("external-data:save", (_event, projectPath: string, payload: ExternalDataPayload) =>
     saveExternalData(projectPath, payload),
   );
   ipcMain.handle("command:run", (_event, projectPath: string, commandId: CommandId, targetDate: string) =>
-    runEbosCommand(appRoot, projectPath, commandId, targetDate),
+    runEbosCommand(storageRoot, projectPath, commandId, targetDate),
   );
   ipcMain.handle("reports:list", (_event, projectPath: string, filter?: string, search?: string) =>
     listReports(projectPath, filter, search),

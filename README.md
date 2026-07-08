@@ -63,7 +63,13 @@ Package the Windows desktop app:
 npm run package:win
 ```
 
-The unpacked executable is generated at:
+The Windows installer is generated at:
+
+```text
+release/ENHE-EBOS-Operator-1.0.0.exe
+```
+
+The unpacked executable is also generated at:
 
 ```text
 release/win-unpacked/ENHE EBOS Operator.exe
@@ -104,4 +110,3 @@ npm run package:win
 
 - Developer: ENHE
 - Website: [https://www.enhe-tech.com.cn](https://www.enhe-tech.com.cn)
-
