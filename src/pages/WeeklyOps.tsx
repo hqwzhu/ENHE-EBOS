@@ -37,7 +37,7 @@ export default function WeeklyOps({ settings }: WeeklyOpsProps) {
         <div className="flex items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-semibold text-ink">每周运营</h3>
-            <p className="mt-2 text-sm text-slate-600">这里只运行本地演练命令，不创建系统级定时任务。</p>
+            <p className="mt-2 text-sm text-slate-600">这里把每周巡检压缩成中文步骤：看状态、补真实数据、运行安全演练、查看下一步。</p>
           </div>
           <label className="text-sm font-medium text-slate-700">
             日期
@@ -63,18 +63,49 @@ export default function WeeklyOps({ settings }: WeeklyOpsProps) {
             <Mini label="允许迁移" value={formatBoolean(data.safeToRunMigration)} />
             <Mini label="阻塞数量" value={String(data.blockers.length)} />
           </div>
-          <section className="rounded-md border border-line bg-white">
-            <div className="border-b border-line px-4 py-3 text-sm font-semibold text-ink">本周报告预览</div>
-            <pre className="max-h-80 overflow-auto p-4 text-xs leading-5 text-slate-800">{data.weeklyReportPreview || "未找到每周报告"}</pre>
-          </section>
           <section className="rounded-md border border-line bg-white p-5">
-            <h3 className="font-semibold text-ink">下周行动清单</h3>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-700">
-              {data.nextActions.map((action) => (
-                <li key={action}>{action}</li>
+            <h3 className="font-semibold text-ink">本周中文摘要</h3>
+            <ul className="mt-3 grid grid-cols-1 gap-2 text-sm leading-6 text-slate-700">
+              {data.weeklySummaryLines.map((line) => (
+                <li key={line} className="rounded-md bg-panel px-3 py-2">
+                  {line}
+                </li>
               ))}
             </ul>
           </section>
+          <section className="rounded-md border border-line bg-white p-5">
+            <h3 className="font-semibold text-ink">下周行动清单</h3>
+            {data.nextActions.length > 0 ? (
+              <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-700">
+                {data.nextActions.map((action) => (
+                  <li key={action} className="rounded-md bg-panel px-3 py-2">
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-sm text-slate-600">暂无行动清单。可以先运行每周演练刷新状态。</p>
+            )}
+          </section>
+          {data.blockers.length > 0 ? (
+            <section className="rounded-md border border-amber-200 bg-amber-50 p-5 text-amber-950">
+              <h3 className="font-semibold">当前阻塞项</h3>
+              <ul className="mt-3 space-y-2 text-sm leading-6">
+                {data.blockers.map((blocker) => (
+                  <li key={blocker}>{blocker}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+          <details className="rounded-md border border-line bg-white">
+            <summary className="cursor-pointer px-5 py-4 text-sm font-semibold text-slate-700">
+              查看原始每周报告
+            </summary>
+            <div className="border-t border-line bg-slate-50 px-5 py-3 text-xs leading-5 text-slate-600">
+              原始报告可能包含英文技术字段。普通运营只需要看上面的中文摘要和行动清单。
+            </div>
+            <pre className="max-h-80 overflow-auto p-4 text-xs leading-5 text-slate-800">{data.weeklyReportPreview || "未找到每周报告"}</pre>
+          </details>
         </>
       ) : null}
       <CommandOutput result={result} />

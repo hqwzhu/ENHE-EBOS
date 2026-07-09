@@ -16,6 +16,7 @@ import {
   type SchemaKit,
   type WeeklyOpsData,
 } from "../src/lib/types";
+import { formatDisplayValue, summarizeRiskText, translateReportCategory } from "../src/lib/display";
 import { exists } from "./settings-service";
 
 const execFileAsync = promisify(execFile);
@@ -133,30 +134,30 @@ export async function getRisks(projectPath: string): Promise<RiskSummary[]> {
   const final = await readOptionalJson(await findLatestFinalReport(projectPath));
   const quarantine = record(final?.quarantineAndReviewStatus);
   const risks: RiskSummary[] = [
-    riskFromRecord("Package quarantine", record(quarantine.packageQuarantine), "high", "Package files remain quarantined."),
-    riskFromRecord("Prisma migration quarantine", record(quarantine.prismaMigrationQuarantine), "critical", "Migration files require manual checks."),
-    riskFromRecord("Seed quarantine", record(quarantine.seedQuarantine), "high", "Seed files must not run in production."),
-    riskFromRecord("Admin/API/Core review", record(quarantine.adminApiCoreReview), "high", "Admin/API/core files need dedicated review."),
-    riskFromRecord("Unknown/risky files", record(quarantine.unknownRiskyReview), "high", "Unknown risky files remain separated."),
+    riskFromRecord("依赖文件隔离审计", record(quarantine.packageQuarantine), "high", "依赖文件仍处于隔离状态。"),
+    riskFromRecord("数据库迁移隔离审计", record(quarantine.prismaMigrationQuarantine), "critical", "数据库迁移文件需要人工核对。"),
+    riskFromRecord("种子数据隔离审计", record(quarantine.seedQuarantine), "high", "种子数据文件不得在生产环境运行。"),
+    riskFromRecord("后台、接口和核心代码审计", record(quarantine.adminApiCoreReview), "high", "后台、接口和核心业务文件需要单独审计。"),
+    riskFromRecord("未知风险文件审计", record(quarantine.unknownRiskyReview), "high", "未知风险文件仍需保持隔离。"),
     {
-      title: "Production/staging schema manual check",
+      title: "生产和预发结构人工核对",
       riskLevel: "high",
       status: "manual_check_required",
-      reason: "Production/staging readonly schema state has not been verified by an authorized human.",
+      reason: "生产和预发数据库结构尚未由授权人员完成只读核对。",
       canRunNow: false,
       canCommitNow: false,
       requiresUserConfirmation: true,
-      nextAction: "Use the manual schema check kit. Do not run migration from this app.",
+      nextAction: "使用人工结构核对包，不要在本应用中运行迁移。",
     },
     {
-      title: "External real data waiting",
+      title: "等待外部真实数据",
       riskLevel: "medium",
       status: stringValue(record(final?.currentStatuses).externalPublishingStatus, "waiting_real_data"),
-      reason: "Real external channel URL and metrics are required before backfill apply can be considered.",
+      reason: "必须先录入真实渠道链接和真实数据，之后才能考虑真实回填。",
       canRunNow: false,
       canCommitNow: false,
       requiresUserConfirmation: true,
-      nextAction: "Collect real channel data and run check plus backfill dry-run only.",
+      nextAction: "收集真实渠道数据后，只运行检查和回填演练。",
     },
   ];
   return risks;
@@ -195,11 +196,12 @@ export async function getWeeklyOps(projectPath: string, targetDate = defaultTarg
     targetDate,
     weeklyReportPath,
     weeklyReportPreview,
-    nextActions: stringArray(final?.firstWeekOperatingActions),
+    weeklySummaryLines: createWeeklySummaryLines(status, weeklyReportPath),
+    nextActions: stringArray(final?.firstWeekOperatingActions).map(summarizeRiskText),
     hasRealSignals: Boolean(status.hasRealSignals),
     canBackfill: Boolean(status.canBackfill),
     safeToRunMigration: Boolean(status.safeToRunMigration),
-    blockers: stringArray(final?.remainingBlockers),
+    blockers: stringArray(final?.remainingBlockers).map(summarizeRiskText),
   };
 }
 
@@ -230,15 +232,20 @@ async function summarizeReport(root: string, file: string): Promise<ReportSummar
   const extension = extname(file).toLowerCase();
   const content = extension === ".json" ? await readOptionalJson(file) : null;
   const relativePath = relative(root, file);
+  const type = typeFromPath(relativePath);
+  const summary = summarizeJson(content);
   return {
     path: file,
     relativePath,
     fileName: basename(file),
-    type: typeFromPath(relativePath),
+    type,
+    categoryLabel: translateReportCategory(type),
+    displayTitle: createReportDisplayTitle(relativePath, content, type),
     extension: extension === ".json" ? "json" : extension === ".md" ? "md" : "other",
     updatedAt: fileStat.mtime.toISOString(),
     size: fileStat.size,
-    summary: summarizeJson(content),
+    summary,
+    summaryLines: createReportSummaryLines(content, relativePath, type),
   };
 }
 
@@ -300,6 +307,20 @@ function typeFromPath(path: string) {
   if (normalized.includes("seed-audit")) return "seed-audit";
   if (normalized.includes("core-audit")) return "core-audit";
   if (normalized.includes("unknown-audit")) return "unknown-audit";
+  if (normalized.includes("weekly")) return "weekly";
+  if (normalized.includes("monthly")) return "monthly";
+  if (normalized.includes("autonomous-runs")) return "autonomous-runs";
+  if (normalized.includes("decision")) return "decision";
+  if (normalized.includes("evidence")) return "evidence";
+  if (normalized.includes("revenue")) return "revenue";
+  if (normalized.includes("validation")) return "validation";
+  if (normalized.includes("competitor")) return "competitor";
+  if (normalized.includes("market")) return "market";
+  if (normalized.includes("product")) return "product";
+  if (normalized.includes("geo")) return "geo";
+  if (normalized.includes("seo")) return "seo";
+  if (normalized.includes("data-sources")) return "data-sources";
+  if (normalized.includes("health")) return "health";
   return normalized.split("/")[0] || "other";
 }
 
@@ -318,15 +339,84 @@ function stringValue(value: unknown, fallback: string) {
 
 function riskFromRecord(title: string, data: Record<string, unknown>, riskLevel: RiskSummary["riskLevel"], fallbackReason: string): RiskSummary {
   return {
-    title,
+    title: summarizeRiskText(title),
     riskLevel,
     status: stringValue(data.status, "quarantined"),
-    reason: stringValue(data.reason, fallbackReason),
+    reason: summarizeRiskText(stringValue(data.reason, fallbackReason)),
     canRunNow: Boolean(data.canRunNow),
     canCommitNow: Boolean(data.canCommitNow ?? data.safeToCommit),
     requiresUserConfirmation: Boolean(data.requiresUserConfirmation ?? true),
-    nextAction: stringValue(data.nextAction ?? data.recommendedAction, "Keep quarantined and review separately."),
+    nextAction: summarizeRiskText(stringValue(data.nextAction ?? data.recommendedAction, "Keep quarantined and review separately.")),
   };
+}
+
+function createReportDisplayTitle(relativePath: string, content: Record<string, unknown> | null, type: string) {
+  const reportType = stringValue(content?.reportType, "");
+  const titleMap: Record<string, string> = {
+    ebos_operations_ready_final_report: "经营系统最终状态报告",
+    final_quality_gate: "最终质量检查报告",
+    final_safe_commit_plan: "安全提交计划",
+    remaining_dirty_router_audit: "剩余文件风险分流审计",
+    remaining_dirty_router_handling_plan: "剩余文件处理计划",
+    package_dependency_decision: "依赖变更决策报告",
+    prisma_migration_quarantine_batch: "数据库迁移隔离报告",
+    seed_files_decision: "种子数据决策报告",
+  };
+
+  if (reportType && titleMap[reportType]) return titleMap[reportType];
+  if (type === "weekly") return "每周经营巡检报告";
+  if (type === "monthly") return "月度经营复盘报告";
+  return translateReportCategory(type);
+}
+
+function createReportSummaryLines(content: Record<string, unknown> | null, relativePath: string, type: string) {
+  const lines = [`这是一份${translateReportCategory(type)}，用于查看经营状态、风险和下一步动作。`];
+
+  if (!content) {
+    lines.push("这份报告是文字报告，应用已隐藏原始技术内容。需要排查时可以展开查看。");
+    return lines;
+  }
+
+  const currentStatuses = record(content.currentStatuses);
+  const finalQualityGate = record(content.finalQualityGate);
+  const values: Array<[string, unknown]> = [
+    ["目标日期", content.targetDate],
+    ["运营准备状态", content.operationsReady],
+    ["部署状态", content.deploymentStatus ?? currentStatuses.deploymentStatus],
+    ["外部发布状态", content.externalPublishingStatus ?? currentStatuses.externalPublishingStatus],
+    ["已有真实信号", content.hasRealSignals ?? currentStatuses.hasRealSignals],
+    ["允许真实回填", content.canBackfill ?? currentStatuses.canBackfill],
+    ["允许数据库迁移", content.safeToRunMigration ?? currentStatuses.safeToRunMigration],
+    ["质量检查", content.qualityGatePassed ?? finalQualityGate.status ?? finalQualityGate.qualityGatePassed],
+    ["风险等级", content.riskLevel],
+    ["状态", content.status],
+  ];
+
+  for (const [label, value] of values) {
+    if (value !== undefined && value !== null && value !== "") {
+      lines.push(`${label}：${formatDisplayValue(value)}`);
+    }
+  }
+
+  if (type === "final") {
+    lines.push("建议先看运营准备状态、外部发布状态和阻塞项，再决定是否需要录入真实渠道数据。");
+  } else if (relativePath.includes("prisma") || relativePath.includes("migration")) {
+    lines.push("这类报告只用于审计数据库变更风险，本应用不会执行数据库迁移。");
+  } else if (relativePath.includes("external-publishing")) {
+    lines.push("这类报告用于确认真实渠道发布和真实数据，不要填写虚假浏览量、咨询数或订单。");
+  }
+
+  return lines.length > 1 ? lines : ["这份报告暂无结构化摘要，可展开原始技术明细查看。"];
+}
+
+function createWeeklySummaryLines(status: Record<string, unknown>, weeklyReportPath: string | null) {
+  return [
+    weeklyReportPath ? "已找到每周报告，下面只显示中文操作摘要。" : "未找到每周报告，请先运行每周运营演练。",
+    `真实外部信号：${formatDisplayValue(Boolean(status.hasRealSignals))}`,
+    `允许真实回填：${formatDisplayValue(Boolean(status.canBackfill))}`,
+    `允许数据库迁移：${formatDisplayValue(Boolean(status.safeToRunMigration))}`,
+    "建议顺序：先确认首页状态，再录入真实渠道数据，最后只运行检查和演练命令。",
+  ];
 }
 
 function isSelectOnlySql(sql: string) {

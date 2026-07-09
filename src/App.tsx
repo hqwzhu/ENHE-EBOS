@@ -37,7 +37,7 @@ export type AppPage =
 
 const navItems = [
   { id: "dashboard", label: "首页总览", icon: Home },
-  { id: "guide", label: "新手指南", icon: BookOpenCheck },
+  { id: "guide", label: "快速开始", icon: BookOpenCheck },
   { id: "external-data", label: "外部数据", icon: UploadCloud },
   { id: "commands", label: "命令运行", icon: PlayCircle },
   { id: "reports", label: "报告中心", icon: FileText },
@@ -48,7 +48,7 @@ const navItems = [
 ] as const;
 
 export default function App() {
-  const [page, setPage] = useState<AppPage>("dashboard");
+  const [page, setPage] = useState<AppPage>("guide");
   const [settings, setSettings] = useState<OperatorSettings>({
     ebosProjectPath: defaultEbosProjectPath,
     defaultDate: defaultTargetDate,
@@ -62,7 +62,7 @@ export default function App() {
       .catch((error) => setLoadError(error instanceof Error ? error.message : String(error)));
   }, []);
 
-  const pageTitle = useMemo(() => navItems.find((item) => item.id === page)?.label ?? "首页总览", [page]);
+  const pageTitle = useMemo(() => navItems.find((item) => item.id === page)?.label ?? "快速开始", [page]);
 
   return (
     <Layout navItems={navItems} activePage={page} onNavigate={setPage} pageTitle={pageTitle} settings={settings}>

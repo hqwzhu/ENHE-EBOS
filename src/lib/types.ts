@@ -23,8 +23,8 @@ export const operatorSettingsSchema = z.object({
 export type OperatorSettings = z.infer<typeof operatorSettingsSchema>;
 
 export const externalDataEntrySchema = z.object({
-  platform: z.string().min(1, "platform is required"),
-  channelName: z.string().min(1, "channelName is required"),
+  platform: z.string().min(1, "请填写平台名称。"),
+  channelName: z.string().min(1, "请填写渠道名称。"),
   published: z.boolean(),
   publishedAt: z.string().optional().default(""),
   publishedUrl: z.string().trim().optional().default(""),
@@ -50,7 +50,7 @@ export const externalDataPayloadSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["entries", index, "publishedUrl"],
-          message: "published=true requires a real publishedUrl. Do not invent one.",
+          message: "勾选已真实发布时，必须填写真实发布链接。不要编造链接。",
         });
       }
     });
@@ -93,10 +93,13 @@ export type ReportSummary = {
   relativePath: string;
   fileName: string;
   type: string;
+  categoryLabel: string;
+  displayTitle: string;
   extension: "json" | "md" | "other";
   updatedAt: string;
   size: number;
   summary: Record<string, unknown>;
+  summaryLines: string[];
 };
 
 export type ReportContent = ReportSummary & {
@@ -151,6 +154,7 @@ export type WeeklyOpsData = {
   targetDate: string;
   weeklyReportPath: string | null;
   weeklyReportPreview: string;
+  weeklySummaryLines: string[];
   nextActions: string[];
   hasRealSignals: boolean;
   canBackfill: boolean;

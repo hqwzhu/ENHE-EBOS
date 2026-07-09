@@ -14,6 +14,8 @@ const filters = [
   { value: "final", label: "最终报告" },
   { value: "deployment", label: "部署报告" },
   { value: "external-publishing", label: "外部发布" },
+  { value: "weekly", label: "每周运营" },
+  { value: "monthly", label: "月度复盘" },
   { value: "automation", label: "自动化" },
   { value: "prisma-audit", label: "数据库审计" },
   { value: "package-audit", label: "依赖审计" },
@@ -47,7 +49,10 @@ export default function Reports({ settings }: ReportsProps) {
       <aside className="space-y-4">
         <section className="rounded-md border border-line bg-white p-4">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-semibold text-ink">报告筛选</h3>
+            <div>
+              <h3 className="font-semibold text-ink">报告中心</h3>
+              <p className="mt-1 text-xs leading-5 text-slate-500">先看中文摘要，需要排查时再展开原始技术明细。</p>
+            </div>
             <button type="button" onClick={load} className="focus-ring rounded-md border border-line p-2 hover:bg-slate-50" aria-label="刷新">
               <RefreshCw className="h-4 w-4" />
             </button>
@@ -64,21 +69,28 @@ export default function Reports({ settings }: ReportsProps) {
         <div className="max-h-[680px] space-y-2 overflow-auto pr-1">
           {reports.map((report) => (
             <button key={report.path} type="button" onClick={() => void open(report)} className="focus-ring w-full rounded-md border border-line bg-white p-3 text-left hover:bg-slate-50">
-              <div className="flex items-center justify-between gap-3">
-                <span className="min-w-0 truncate text-sm font-semibold text-ink">{report.fileName}</span>
-                <span className="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-[11px] text-slate-600">报告</span>
+          <div className="flex items-center justify-between gap-3">
+                <span className="min-w-0 truncate text-sm font-semibold text-ink">{report.displayTitle}</span>
+                <span className="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-[11px] text-slate-600">{report.categoryLabel}</span>
               </div>
               <p className="mt-2 text-xs text-slate-500">{formatDateTime(report.updatedAt)} · {formatBytes(report.size)}</p>
-              <p className="mt-1 truncate text-xs text-slate-500">{report.relativePath}</p>
+              <p className="mt-2 line-clamp-2 text-xs leading-5 text-slate-600">{report.summaryLines[0] ?? "暂无摘要"}</p>
             </button>
           ))}
+          {reports.length === 0 ? (
+            <div className="rounded-md border border-dashed border-line bg-white p-4 text-sm text-slate-500">
+              没有找到匹配报告。请先确认设置页里的项目路径指向包含 reports/ebos 的 EBOS 项目目录，也可以切换筛选条件或清空搜索词。
+            </div>
+          ) : null}
         </div>
       </aside>
       <main>
         <ReportViewer report={selected} onOpenFolder={(path) => operatorApi.openContainingFolder(path)} />
         <section className="mt-4 rounded-md border border-line bg-white p-5">
           <h3 className="font-semibold text-ink">下一步建议</h3>
-          <p className="mt-2 text-sm text-slate-600">优先查看最终报告、部署报告、外部发布报告和数据库审计报告，再决定是否需要人工动作。</p>
+          <p className="mt-2 text-sm text-slate-600">
+            新手优先查看“最终报告”和“外部发布”。如果摘要提示等待真实数据，就去外部数据页录入真实链接和数据。
+          </p>
         </section>
       </main>
     </div>
